@@ -1,6 +1,9 @@
 ﻿using WebApiProducts.Models;
 using Microsoft.AspNetCore.Mvc;
 using WebApiProducts.Repository;
+using System.Net;
+using System;
+using System.Drawing;
 
 namespace WebApiProducts.Controllers
 {
@@ -20,41 +23,87 @@ namespace WebApiProducts.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<List<Products>>> GetProductsAll()
+        public async Task<IActionResult> GetProductsAll()
         {
-            List<Products> products = await _productRepository.GetProducts();
-
-            return products;
+            try
+            {
+                List<Products> products = await _productRepository.GetProducts();
+                return new OkObjectResult(products);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new { error = ex.Message });
+            }
         }
+       
+        
         [HttpGet("{id}")]
-        public async Task<ActionResult<Products>> GetProductById(int id)
+        public async Task<IActionResult> GetProductById(int id)
         {
-            
+            try
+            {
                 var product = await _productRepository.GetProductById(id);
-                return product;
-
+                return new OkObjectResult(product);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new { error = ex.Message });
+            }
         }
-
 
         [HttpDelete("{id}")]
-        public bool DeleteProduct(int id)
+        public async Task<ActionResult<bool>> DeleteProduct(int id)
         {
-            var result = _productRepository.DeleteProduct(id).GetAwaiter().GetResult();
-            return result;
-            
+            try
+            {
+                bool result = await _productRepository.DeleteProduct(id);
+                if (result)
+                {
+                    return new OkObjectResult(result);
+                }
+                else
+                {
+                    return new NotFoundResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new { error = ex.Message });
+            }
         }
         [HttpPut]
-        public bool Update(Products product)
+        public async Task<ActionResult<bool>> Update(Products product)
         {
-            var result = _productRepository.UpdateProduct(product).GetAwaiter().GetResult();
-            return result;
+            try
+            {
+                bool result = await _productRepository.UpdateProduct(product);
+
+                if (result)
+                {
+                    return new OkObjectResult(result);
+                }
+                else
+                {
+                    return new NotFoundResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new { error = ex.Message });
+            }
         }
         [HttpPost]
-        public bool CreateProduct(Products product)
+        public async Task<ActionResult<bool>> CreateProduct(Products product)
         {
-
-            var result = _productRepository.InsertProduct(product).GetAwaiter().GetResult();
-            return result;
+            try
+            {
+                bool result = await _productRepository.InsertProduct(product);
+                return new OkObjectResult(result);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new { error = ex.Message });
+            }
         }
 
     }
