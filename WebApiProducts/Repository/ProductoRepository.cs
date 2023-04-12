@@ -144,7 +144,7 @@ namespace WebApiProducts.Repository
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@productoId", product.productoId);
-                        command.Parameters.AddWithValue("@Product", product.producto);
+                        command.Parameters.AddWithValue("@producto", product.producto);
                         command.Parameters.AddWithValue("@cantidadProducto", product.cantidadProducto);
                         command.Parameters.AddWithValue("@precio", product.precio);
                         int rowsAffected = await command.ExecuteNonQueryAsync();
@@ -175,7 +175,7 @@ namespace WebApiProducts.Repository
                 {
                     await connection.OpenAsync();
 
-                    using (var command = new SqlCommand("DeleteProductById", connection))
+                    using (var command = new SqlCommand("DeleteProduct", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@productoId", id);
@@ -194,7 +194,6 @@ namespace WebApiProducts.Repository
             }
             catch (Exception ex)
             {
-                // Manejo del error
                 Console.WriteLine($"Error al eliminar el producto con Id {id}: {ex.Message}");
                 return false;
             }

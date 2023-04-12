@@ -31,9 +31,6 @@ namespace WebApiProducts.Controllers
         {
             
                 var product = await _productRepository.GetProductById(id);
-
-              
-
                 return product;
 
         }
@@ -46,7 +43,7 @@ namespace WebApiProducts.Controllers
             return result;
             
         }
-        [HttpPut("{id}")]
+        [HttpPut]
         public bool Update(Products product)
         {
             var result = _productRepository.UpdateProduct(product).GetAwaiter().GetResult();
